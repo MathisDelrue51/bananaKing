@@ -77,6 +77,8 @@ io.on("connection", (socket) => {
 
         //Met a joueur la liste des joueurs pour tout le monde
         io.emit("updateListPlayers", gameInfos.players);
+
+        io.emit('updateOtherPlayers', playersInGame);
     });
 
     //Un joueur a cliqué sur le bouton start
@@ -125,6 +127,7 @@ io.on("connection", (socket) => {
             //On cache le bouton start pour tous et on affiche le round
             io.emit('hideStartButton');
             io.emit('updateRound', gameInfos.round);
+            //TODO 
             //io.emit('updateOrder', playersInGame);
         }
     });
@@ -149,6 +152,7 @@ io.on("connection", (socket) => {
                 gameInfos.cardDealed++;                
             }
             io.emit('updateHands', playersInGame);
+            io.emit('updateOtherPlayers', playersInGame);
         }
     });
 

@@ -29,22 +29,47 @@ socket.on('updateListPlayers', (players) => {
     }
 });
 
-//Cahce le bouton start pour tous les joueurs présent actuellement sur le jeu
+socket.on('updateOtherPlayers', (playersInGame) => {
+    //Récupére le nom du joueur courant
+    const currentPlayer = document.getElementById('nameCurrentPlayer').textContent;
+
+    const template = document.getElementById('template-otherPlayersInfos');
+
+    const otherPlayers = document.getElementById('topBoard');
+    otherPlayers.textContent = "";
+
+    //Pour tous les joueurs in game (sauf le joueur courant), on ajoute et complète le template otherplayer dans le topboard
+
+    for (player in playersInGame) {
+        if (player !== currentPlayer) {
+
+            const newPlayer = document.importNode(template.content, true);
+            newPlayer.querySelector('.playerName').textContent = player;
+            newPlayer.querySelector('.previousPlayer').textContent = `Joueur précédent: ${playersInGame[player].previousPlayer}`;
+            newPlayer.querySelector('.nextPlayer').textContent = `Joueur suivant: ${playersInGame[player].nextPlayer}`;
+            newPlayer.querySelector('.orderInTurn').textContent = `Ordre: ${playersInGame[player].order}e`;
+            newPlayer.querySelector('.cardLeftInHand').textContent = `Cartes restantes: ${playersInGame[player].cards.length}`;
+            otherPlayers.appendChild(newPlayer);
+        }
+    }
+});
+
+//Cache le bouton start pour tous les joueurs présent actuellement sur le jeu
 socket.on('hideStartButton', () => {
     const startButton = document.getElementById('startButton');
     startButton.classList.add('is-hidden');
-    
+
     //drawCards est appelé par chaque navigateur, une sécurité a été rajouté côté serveur pour éviter de distribuer trop de cartes.
     socket.emit('drawCards');
 });
 
 //TODO Devrait mettre à jour une information pour que le joueur sache en quelle position il va jouer.
-socket.on('updateOrder', ()=>{
+socket.on('updateOrder', () => {
 
 });
 
 //Met à jour l'affichage du round actuel pour tous les joueurs
-socket.on('updateRound', (round)=>{
+socket.on('updateRound', (round) => {
     document.getElementById('round').textContent = round;
 });
 
@@ -158,7 +183,7 @@ const app = {
             app.havePlayed = true;
 
             document.getElementById(`${idCardPlayed}`).remove();
-        }else{
+        } else {
             console.log("carte déjà jouée");
         }
 
