@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkullKing</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div id="board">
+            <div id="topBoard">
+                <div class="otherPlayer">
+                    <div class="cardQuantity">
+                        5
+                    </div>
+                    <div class="playerName">
+                        Bap
+                    </div>
+                </div>
+            </div>
+
+            <div id="midBoard">
+                <div id="startZone">
+                    <div id="nbPlayers"></div>
+                    <div id="playersList">
+                    </div>
+                    <button id="startButton">
+                        Start
+                    </button>
+                </div>
+
+                <div id="dropZone">
+
+
+                </div>
+                <div id="scoreZone">
+                    <div id="round">
+                        
+                    </div>
+                    <button id="scoreButton">
+                        Score
+                    </button>
+                </div>
+
+            </div>
+
+            <div id="bottomBoard">
+                <div id="nameCurrentPlayer">
+
+                </div>
+                <div id="boardCurrentPlayer">
+                    <form id="pseudoForm">
+                        <div>
+                            <label for="username">Pseudo</label>
+                            <input type="text" name="username" id="username" value="michel">
+                        </div>
+                        <input type="submit" value="Valider">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="scoreModale" class="is-hidden">
+            <table>
+                <thead>
+                    <tr class="players">
+                        <th></th>
+                    </tr>
+                    <tr class="forecast">
+                        <th></th>
+                        <th>prévu</th>
+                        <th>score</th>
+
+                        <th>prévu</th>
+                        <th>score</th>
+
+                        <th>prévu</th>
+                        <th>score</th>
+
+                        <th>prévu</th>
+                        <th>score</th>
+
+                        <th>prévu</th>
+                        <th>score</th>
+
+                        <th>prévu</th>
+                        <th>score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>1</th>
+
+                    </tr>
+                    <tr>
+                        <th>2</th>
+
+                    </tr>
+                    <tr>
+                        <th>3</th>
+
+                    </tr>
+                    <tr>
+                        <th>4</th>
+
+                    </tr>
+                    <tr>
+                        <th>5</th>
+
+                    </tr>
+                    <tr>
+                        <th>6</th>
+
+                    </tr>
+                    <tr>
+                        <th>7</th>
+
+                    </tr>
+                    <tr>
+                        <th>8</th>
+
+                    </tr>
+                    <tr>
+                        <th>9</th>
+
+                    </tr>
+                    <tr>
+                        <th>10</th>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"
+        integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy"
+        crossorigin="anonymous"></script>
+    <script src="js/app.js" charset="utf-8"></script>
+
+    <template id="template-cardBoard">
+        <div class="cardPlayed">
+            <div class="playerName">
+                
+            </div>
+            <div class="cardImage">
+                
+            </div>
+            <!-- <img src="" alt=""> -->
+        </div>
+    </template>
+</body>
+
+</html>

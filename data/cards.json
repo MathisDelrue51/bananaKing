@@ -1,0 +1,332 @@
+[
+    {
+        "id":1,
+        "type": "blue",
+        "value": 1
+    },
+    {
+        "id":2,
+        "type": "blue",
+        "value": 2
+    },
+    {
+        "id":3,
+        "type": "blue",
+        "value": 3
+    },
+    {
+        "id":4,
+        "type": "blue",
+        "value": 4
+    },
+    {
+        "id":5,
+        "type": "blue",
+        "value": 5
+    },
+    {
+        "id":6,
+        "type": "blue",
+        "value": 6
+    },
+    {
+        "id":7,
+        "type": "blue",
+        "value": 7
+    },
+    {
+        "id":8,
+        "type": "blue",
+        "value": 8
+    },
+    {
+        "id":9,
+        "type": "blue",
+        "value": 9
+    },
+    {
+        "id":10,
+        "type": "blue",
+        "value": 10
+    },
+    {
+        "id":11,
+        "type": "blue",
+        "value": 11
+    },
+    {
+        "id":12,
+        "type": "blue",
+        "value": 12
+    },
+    {
+        "id":13,
+        "type": "blue",
+        "value": 13
+    },
+    {
+        "id":14,
+        "type": "red",
+        "value": 1
+    },
+    {
+        "id":15,
+        "type": "red",
+        "value": 2
+    },
+    {
+        "id":16,
+        "type": "red",
+        "value": 3
+    },
+    {
+        "id":17,
+        "type": "red",
+        "value": 4
+    },
+    {
+        "id":18,
+        "type": "red",
+        "value": 5
+    },
+    {
+        "id":19,
+        "type": "red",
+        "value": 5
+    },
+    {
+        "id":20,
+        "type": "red",
+        "value": 7
+    },
+    {
+        "id":21,
+        "type": "red",
+        "value": 8
+    },
+    {
+        "id":22,
+        "type": "red",
+        "value": 9
+    },
+    {
+        "id":23,
+        "type": "red",
+        "value": 10
+    },
+    {
+        "id":24,
+        "type": "red",
+        "value": 11
+    },
+    {
+        "id":25,
+        "type": "red",
+        "value": 12
+    },
+    {
+        "id":26,
+        "type": "red",
+        "value": 13
+    },
+    {
+        "id":27,
+        "type": "yellow",
+        "value": 1
+    },
+    {
+        "id":28,
+        "type": "yellow",
+        "value": 2
+    },
+    {
+        "id":29,
+        "type": "yellow",
+        "value": 3
+    },
+    {
+        "id":30,
+        "type": "yellow",
+        "value": 4
+    },
+    {
+        "id":31,
+        "type": "yellow",
+        "value": 5
+    },
+    {
+        "id":32,
+        "type": "yellow",
+        "value": 6
+    },
+    {
+        "id":33,
+        "type": "yellow",
+        "value": 7
+    },
+    {
+        "id":34,
+        "type": "yellow",
+        "value": 8
+    },
+    {
+        "id":35,
+        "type": "yellow",
+        "value": 9
+    },
+    {
+        "id":36,
+        "type": "yellow",
+        "value": 10
+    },
+    {
+        "id":37,
+        "type": "yellow",
+        "value": 11
+    },
+    {
+        "id":38,
+        "type": "yellow",
+        "value": 12
+    },
+    {
+        "id":39,
+        "type": "yellow",
+        "value": 13
+    },
+    {
+        "id":40,
+        "type": "black",
+        "value": 1
+    },
+    {
+        "id":41,
+        "type": "black",
+        "value": 2
+    },
+    {
+        "id":42,
+        "type": "black",
+        "value": 3
+    },
+    {
+        "id":43,
+        "type": "black",
+        "value": 4
+    },
+    {
+        "id":44,
+        "type": "black",
+        "value": 5
+    },
+    {
+        "id":45,
+        "type": "black",
+        "value": 6
+    },
+    {
+        "id":46,
+        "type": "black",
+        "value": 7
+    },
+    {
+        "id":47,
+        "type": "black",
+        "value": 8
+    },
+    {
+        "id":48,
+        "type": "black",
+        "value": 9
+    },
+    {
+        "id":49,
+        "type": "black",
+        "value": 10
+    },
+    {
+        "id":50,
+        "type": "black",
+        "value": 11
+    },
+    {
+        "id":51,
+        "type": "black",
+        "value": 12
+    },
+    {
+        "id":52,
+        "type": "black",
+        "value": 13
+    },
+    {
+        "id":53,
+        "type": "special",
+        "value": "escape"
+    },
+    {
+        "id":54,
+        "type": "special",
+        "value": "escape"
+    },
+    {
+        "id":55,
+        "type": "special",
+        "value": "escape"
+    },
+    {
+        "id":56,
+        "type": "special",
+        "value": "escape"
+    },
+    {
+        "id":57,
+        "type": "special",
+        "value": "escape"
+    },
+    {
+        "id":58,
+        "type": "special",
+        "value": "pirate"
+    },
+    {
+        "id":59,
+        "type": "special",
+        "value": "pirate"
+    },
+    {
+        "id":60,
+        "type": "special",
+        "value": "pirate"
+    },
+    {
+        "id":61,
+        "type": "special",
+        "value": "pirate"
+    },
+    {
+        "id":62,
+        "type": "special",
+        "value": "pirate"
+    },
+    {
+        "id":63,
+        "type": "special",
+        "value": "mermaid"
+    },
+    {
+        "id":64,
+        "type": "special",
+        "value": "mermaid"
+    },
+    {
+        "id":65,
+        "type": "special",
+        "value": "scary mary"
+    },
+    {
+        "id":66,
+        "type": "special",
+        "value": "skull king"
+    }
+]

@@ -1,0 +1,133 @@
+html {
+    font-size: 16px;
+    font-family: 'Asap', sans-serif;
+    background-color:#588f4d;
+}
+
+#board{   
+    
+}
+
+#topBoard{    
+    height: 20vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.otherPlayer{
+    width: 20%;
+    background-color: rgb(44, 73, 38,0.5);
+    margin: 20px;
+    text-align: center; 
+    display: flex;
+    flex-direction: column;   
+    justify-content: space-around;
+}
+
+.cardQuantity{
+
+}
+
+.playerName{
+    font-size: 30px;
+}
+
+#midBoard{
+    background-color: rgb(44, 73, 38,0.5);
+    height: 40vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+}
+
+#dropZone{
+    background-color:#95c98a;
+    display: flex;
+    flex-direction: row;
+    justify-content: center; 
+    align-items: center;
+    width: 80%;
+}
+
+.cardPlayed{
+    display: flex;
+    flex-direction: column;  
+    justify-content: space-around;  
+    text-align: center;
+    background-color: rgba(108, 148, 100, 0.5);     
+    width: 20%; 
+    height: 80%;
+    margin: 10px;   
+}
+
+#scoreZone, #startZone{
+    background-color:#8ac5c9;
+    width: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+#round, #nbPlayers{
+    font-size: 50px;
+    text-align: center;
+    margin-bottom: 10%;
+}
+
+#scoreButton, #startButton{
+    width: 80%;
+    height: 20%;
+    align-self: center;
+    border-radius: 10%;
+}
+
+#bottomBoard{
+    height: 35vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin:20px;
+}
+
+#boardCurrentPlayer{
+    background-color:#95c98a;
+    display: flex;
+    flex-direction: row;
+    justify-content: center; 
+    align-items: center;
+    width: 80%;    
+}
+
+#nameCurrentPlayer{
+    background-color:#8ac5c9;
+    width: 10%;
+    text-align: center;
+}
+
+.cardCurrentPlayer{
+    background-color: rgba(108, 148, 100, 0.5);     
+    width: 8%; 
+    height: 80%;
+    margin: 1%; 
+    text-align: center;
+}
+
+#scoreModale{
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    background-color: white;
+    border: 1px solid black;
+    padding: 10px;    
+}
+
+#scoreModale th{
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.is-hidden{
+    visibility: hidden;
+}
