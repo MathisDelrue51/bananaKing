@@ -5,7 +5,7 @@ html {
 }
 
 #topBoard{    
-    height: 20vh;
+    height: 30vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -27,7 +27,7 @@ html {
 
 #midBoard{
     background-color: rgb(44, 73, 38,0.5);
-    height: 40vh;
+    height: 30vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -76,7 +76,7 @@ html {
 }
 
 #bottomBoard{
-    height: 35vh;
+    height: 30vh;
     display: flex;
     flex-direction: row;
     justify-content: center;

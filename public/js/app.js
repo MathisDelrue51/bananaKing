@@ -125,7 +125,11 @@ socket.on('updateOtherPlayers', (playersInGame) => {
             newPlayer.querySelector('.nextPlayer').textContent = `Joueur suivant: ${playersInGame[player].nextPlayer}`;
             newPlayer.querySelector('.orderInTurn').textContent = `Ordre: ${playersInGame[player].order}e`;
             newPlayer.querySelector('.cardLeftInHand').textContent = `Cartes restantes: ${playersInGame[player].cards.length}`;
+            newPlayer.querySelector('.annoucedFolds').textContent = `Pari: ${playersInGame[player].bet}`;
+            newPlayer.querySelector('.currentFolds').textContent = `Nb de plis: ${playersInGame[player].folds}`;
             otherPlayers.appendChild(newPlayer);
+
+
         }
     }
 });
@@ -149,6 +153,8 @@ socket.on('updateTurn', (turn) => {
 //Update the name of the player who has to play
 socket.on('updateWhoHasToPlay', (name) => {
     document.getElementById('whoHasToPlay').textContent = `A qui de jouer: ${name}`;
+
+    app.whoHasToPlay = name;
 });
 
 //Update player hand with its cards
@@ -186,8 +192,11 @@ socket.on('updateBoard', (board) => {
 const app = {
 
     playerName: null,
+    //TODO set hasPlayed back to false at the end of a turn
     hasPlayed: false,
     betNumber: 0,
+
+    whoHasToPlay: null,
 
     /**
      * Initiate the event listeners on the page
@@ -310,15 +319,15 @@ const app = {
     },
 
 
-    //TODO It should verify it's the player turn, and that the card is playable
+    //TODO It should verify if that the card is playable
     /**
      * When a player click on a card
-     * If if didn't play already, add it to the board
+     * If it respects the conditions, add it to the board
      * @param {Event} event 
      */
     playCard: (event) => {
-
-        if (app.hasPlayed === false) {
+        
+        if (app.hasPlayed === false && app.whoHasToPlay === app.playerName) {
             const cardPlayed = event.target.textContent;
             const idCardPlayed = event.target.id;
 
@@ -333,7 +342,7 @@ const app = {
 
             document.getElementById(`${idCardPlayed}`).remove();
         } else {
-            console.log("carte déjà jouée");
+            console.log("Ce n'est pas le moment");
         }
 
 

@@ -28,7 +28,8 @@ const gameInfos = {
     cards: allCards,
     nbCards: 66,
     cardDealed: 0,
-    betsDone: 0
+    betsDone: 0,
+    whoHasToPlay: null
 };
 
 //Will contain all players information
@@ -158,6 +159,7 @@ io.on("connection", (socket) => {
 
                 if (orderedPlayerPool.indexOf(player) === 0) {
                     playersInGame[player].previousPlayer = orderedPlayerPool[orderedPlayerPool.length - 1];
+                    gameInfos.whoHasToPlay = player;
                 } else {
                     playersInGame[player].previousPlayer = orderedPlayerPool[orderedPlayerPool.indexOf(player) - 1];
                 }
@@ -172,6 +174,7 @@ io.on("connection", (socket) => {
             io.emit('hideStartButton');
             io.emit('updateRound', gameInfos.round);
             io.emit('updateTurn', gameInfos.turn);
+            io.emit('updateWhoHasToPlay', gameInfos.whoHasToPlay);
 
             //Call drawCards function on server to draw cards to every player            
             drawCards();
@@ -244,7 +247,6 @@ io.on("connection", (socket) => {
         gameInfos.betsDone++;
 
         if(gameInfos.betsDone === gameInfos.nbPlayers){
-            //TODO Update score board with all bets
             io.emit('updateScoreBoard', scoreInfo);
         }
     });
@@ -257,7 +259,9 @@ io.on("connection", (socket) => {
         board[playerName] = [];
         board[playerName].push(cardPlayed);
         io.emit('updateBoard', board);
+
+        //TODO If everyone has played, we won't update whoHasToPlay
+        gameInfos.whoHasToPlay = playersInGame[playerName].nextPlayer;
+        io.emit('updateWhoHasToPlay', gameInfos.whoHasToPlay);
     });
-
-
 });
