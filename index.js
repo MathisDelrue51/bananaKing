@@ -18,25 +18,24 @@ const http = app.listen(port, () => {
 
 const io = new Server(http);
 
-//Contient toutes les infos de base du jeu
+//Contain all basics game information
 const gameInfos = {
-    round: 5,
     nbPlayers: 0,
     players: [],
     isStarted: false,
-    allCardsCopy: allCards,
+    round: 5,
+    turn: 1,
     cards: allCards,
     nbCards: 66,
     cardDealed: 0,
-    initialPlayer: null
 };
 
-//Contient les joueurs en jeu et les cartes qu'ils ont en main
+//Will contain all players information
 const playersInGame = {
 
 };
 
-//Contient le board avec les cartes jouées
+//Will contain the cards played 
 const board = {
 
 };
@@ -45,45 +44,46 @@ const board = {
 io.on("connection", (socket) => {
 
     console.log("user connected");
-    //Lorsqu'un joueur se connecte, met a jour le nombre de joueur et affiche les joueurs en jeu
+    //When a user connect to the page, udpate the nombre of players in game and show players who already validated their name   
     gameInfos.nbPlayers++;
     io.emit("updateNb", gameInfos.nbPlayers);
+    //Show list of players already in game and update score board with player names
     io.emit('updateListPlayers', gameInfos.players);
 
-    //Lorsqu'un joueur se décconnecte, met a jour le nombre de joueur 
-    //TODO et la liste les joueurs en jeu
+    //When a player leave the page, update the players in game
+    //TODO should update the list of players name and the score board
     socket.on('disconnect', () => {
         console.log('user disconnected');
         gameInfos.nbPlayers--;
         io.emit("updateNb", gameInfos.nbPlayers);
-        //TODO Trouver comment retirer le joueur qui s'est déconnecté de la liste des joueurs
-        //Mettre a jour la liste des joueurs
+
+        //TODO Find which player disconnected and update list of players  
     });
 
-
-    // Un nouveau joueur a validé son pseudo
+    // A new player validated his name    
     socket.on('newPlayer', (playerName) => {
 
-        //Ajoute le nom du joueur à la liste des joueurs
+        //Add the name to the list of players
         gameInfos.players.push(playerName);
 
-        //Crée un objet pour représenter le joueur
+        //Create an object to represent the player and all needed information
         playersInGame[playerName] = {
-            cards : [],
+            cards: [],
             order: 0,
             previousPlayer: null,
             nextPlayer: null
         };
 
-        //Met a joueur la liste des joueurs pour tout le monde
+        //Update the list of players and score board with player names for everyone
         io.emit("updateListPlayers", gameInfos.players);
 
+        //Update topboard to show other players on every one screen.
         io.emit('updateOtherPlayers', playersInGame);
     });
 
-    //Un joueur a cliqué sur le bouton start
+    //A player clicked on the start button
     socket.on('startNewGame', () => {
-        //On vérifie qu'une game n'est pas déjà en cours
+        //We verify if a game has already started and has the minimum of players
         // if (gameInfos.isStarted) {
         //     console.log('Partie déjà en cours')
         // } else 
@@ -92,77 +92,73 @@ io.on("connection", (socket) => {
         } else {
             console.log("lancement de la partie");
             gameInfos.isStarted = true;
-            
-            //Récupère de le nom de tous les joueurs inGame
+
+            //We push all player names in an array
             const playerPool = [];
-            for(player in playersInGame){
+            for (player in playersInGame) {
                 playerPool.push(player);
             }
 
-            //Ordonne les joueurs aléatoirement
+            //Randomization of the order in the array
             const orderedPlayerPool = [];
-            while(playerPool.length !== 0){
+            while (playerPool.length !== 0) {
                 index = Math.floor(Math.random() * (playerPool.length - 1));
                 orderedPlayerPool.push(playerPool[index]);
                 playerPool.splice(index, 1);
-            }            
+            }
 
-            //Initialise l'ordre de jeu pour le premier tour et défini le joueur suivant et le précédant
-            for(player of orderedPlayerPool){
+            //Initiate the position of each player and define its previous and next player            
+            for (player of orderedPlayerPool) {
                 playersInGame[player].order = orderedPlayerPool.indexOf(player) + 1;
-                if(orderedPlayerPool.indexOf(player) === 0){
-                    playersInGame[player].previousPlayer = orderedPlayerPool[orderedPlayerPool.length - 1];
 
-                    gameInfos.initialPlayer = player ;
-                }else{
+                if (orderedPlayerPool.indexOf(player) === 0) {
+                    playersInGame[player].previousPlayer = orderedPlayerPool[orderedPlayerPool.length - 1];
+                } else {
                     playersInGame[player].previousPlayer = orderedPlayerPool[orderedPlayerPool.indexOf(player) - 1];
                 }
 
-                if(orderedPlayerPool.indexOf(player) === orderedPlayerPool.length - 1){
+                if (orderedPlayerPool.indexOf(player) === orderedPlayerPool.length - 1) {
                     playersInGame[player].nextPlayer = orderedPlayerPool[0];
-                }else{
+                } else {
                     playersInGame[player].nextPlayer = orderedPlayerPool[orderedPlayerPool.indexOf(player) + 1];
-                }               
+                }
             }
-            //On cache le bouton start pour tous et on affiche le round
+            //Hide the start button for everyone, display round and turn
             io.emit('hideStartButton');
             io.emit('updateRound', gameInfos.round);
-            //TODO 
-            //io.emit('updateOrder', playersInGame);
+            io.emit('updateTurn', gameInfos.turn);            
+
+            //Call drawCards function on server to draw cards to every player            
+            drawCards();
         }
     });
+    
+    /**
+     * Draw a cards to each players depending on the current round
+     */
+    function drawCards() {        
 
-    //TODO Appelé au début de chaque tour pour définir l'ordre des joueurs en fonction de la personne qui débute
-    socket.on('orderPlayers',() =>{
+        while (gameInfos.cardDealed < gameInfos.round) {
+            for (player in playersInGame) {
 
-    });
-
-
-    socket.on('drawCards', () => {
-        //Comme drawCards est appelé par chaque client, on vérifie que le nombre de carte déjà distribuées par joueur est égale au round
-        if (gameInfos.cardDealed < gameInfos.round) {
-            while (gameInfos.cardDealed < gameInfos.round) {
-                for (player in playersInGame) {                    
-                    
-                    newCard = gameInfos.cards[Math.floor(Math.random() * (gameInfos.nbCards - 1))];
-                    //TODO Retirer la carte de la collection pour éviter les doublons lors du tirage
-                    playersInGame[player].cards.push(newCard);                    
-                }
-
-                gameInfos.cardDealed++;                
+                index = Math.floor(Math.random() * (gameInfos.cards.length - 1));
+                newCard = gameInfos.cards[index];                
+                playersInGame[player].cards.push(newCard);
+                gameInfos.cards.splice(index, 1);
             }
-            io.emit('updateHands', playersInGame);
-            io.emit('updateOtherPlayers', playersInGame);
-        }
-    });
 
-    //Ajout un élement à notre objet board avec le nom du joueur qui contient la carte jouée.
+            gameInfos.cardDealed++;
+        }
+        io.emit('updateHands', playersInGame);
+        io.emit('updateOtherPlayers', playersInGame);
+
+    };
+
+    //Add an element to the object board with the name of the player that contain the card played
     socket.on('cardPlayed', ({
         cardPlayed,
         playerName
     }) => {
-
-        //TODO Changer en objet lorsqu'il faudra renvoyer plusieurs informations
         board[playerName] = [];
         board[playerName].push(cardPlayed);
         io.emit('updateBoard', board);

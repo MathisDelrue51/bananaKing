@@ -1,12 +1,12 @@
 const socket = io();
 
-//Met à jour l'affichage du nombre de joueurs connecté (ils n'ont pas forcément validé leur nom)
+//Update the number of connected players displayed (without name validated)
 socket.on('updateNb', (nbPlayers) => {
     const playersInGame = document.getElementById('nbPlayers');
     playersInGame.textContent = `${nbPlayers}/6`
 });
 
-//Met à jour la liste des joueurs ayant validé leur nom ainsi que le tableau des scores
+//Update list of players and score board with validated names
 socket.on('updateListPlayers', (players) => {
 
     const listPlayers = document.getElementById('playersList');
@@ -30,7 +30,7 @@ socket.on('updateListPlayers', (players) => {
 });
 
 socket.on('updateOtherPlayers', (playersInGame) => {
-    //Récupére le nom du joueur courant
+    //Retrieve the current player's name
     const currentPlayer = document.getElementById('nameCurrentPlayer').textContent;
 
     const template = document.getElementById('template-otherPlayersInfos');
@@ -38,8 +38,7 @@ socket.on('updateOtherPlayers', (playersInGame) => {
     const otherPlayers = document.getElementById('topBoard');
     otherPlayers.textContent = "";
 
-    //Pour tous les joueurs in game (sauf le joueur courant), on ajoute et complète le template otherplayer dans le topboard
-
+    //For every player in game (except current player, we add and complete the otherPlayer template in the topboard)
     for (player in playersInGame) {
         if (player !== currentPlayer) {
 
@@ -54,27 +53,29 @@ socket.on('updateOtherPlayers', (playersInGame) => {
     }
 });
 
-//Cache le bouton start pour tous les joueurs présent actuellement sur le jeu
+//Hide the start button for every player already in the game
 socket.on('hideStartButton', () => {
     const startButton = document.getElementById('startButton');
     startButton.classList.add('is-hidden');
-
-    //drawCards est appelé par chaque navigateur, une sécurité a été rajouté côté serveur pour éviter de distribuer trop de cartes.
-    socket.emit('drawCards');
 });
 
-//TODO Devrait mettre à jour une information pour que le joueur sache en quelle position il va jouer.
-socket.on('updateOrder', () => {
-
-});
-
-//Met à jour l'affichage du round actuel pour tous les joueurs
+//Update the round displayed
 socket.on('updateRound', (round) => {
-    document.getElementById('round').textContent = round;
+    document.getElementById('currentRound').textContent = `Round: ${round}`;
 });
 
-//Met à jour la main de chaque joueur avec les cartes qui lui sont attribuées.
-//Attention ici toutes les cartes sont récupérées et on vérifie quel est le joueur courant avant d(appeler la fonction qui lui affichera uniquement ses cartes
+//Update the turn displayed
+socket.on('updateTurn', (turn) => {
+    document.getElementById('currentTurn').textContent = `Turn: ${turn}`;
+});
+
+//Update the name of the player who has to play
+socket.on('updateWhoHasToPlay', (turn) => {
+    document.getElementById('currentTurn').textContent = `Turn: ${turn}`;
+});
+
+//Update player hand with its cards
+// warning: here all players cards are provided, so we verify who is the current player before calling showCards with the corresponding cards
 socket.on('updateHands', (playersInGame) => {
 
     const currentPlayer = document.getElementById('nameCurrentPlayer').textContent;
@@ -82,7 +83,7 @@ socket.on('updateHands', (playersInGame) => {
     app.showCards(playersInGame[currentPlayer].cards);
 });
 
-//Met à jour le board (les cartes jouées) pour tous les joueurs, à chaque fois qu'un joueur joue une carte.
+//Update the board (cards played) for every players each time a player play a card
 socket.on('updateBoard', (board) => {
 
     const dropzone = document.getElementById('dropZone');
@@ -101,8 +102,11 @@ socket.on('updateBoard', (board) => {
 
 const app = {
 
-    havePlayed: false,
+    hasPlayed: false,
 
+    /**
+     * Initiate the event listeners on the page
+     */
     init: () => {
         console.log('init !');
 
@@ -117,7 +121,12 @@ const app = {
 
     },
 
-    //Permet au joueur de valider un formulaire avec son pseudo et de le renvoyer au serveur pour l'ajouter a la liste des joueurs.
+    
+    /**
+     * When submit button clicked on insertNewPlayer form
+     * Insert the player name in the bottom board and send it to the server to add it to the player list
+     * @param {Event} event 
+     */
     insertNewPlayer: (event) => {
 
         event.preventDefault();
@@ -133,12 +142,18 @@ const app = {
         socket.emit('newPlayer', name);
     },
 
-    //Lance la game si un joueur a cliqué sut le bouton "start Game"
+    /**
+     * When start button triggered
+     * Call the startNewGame function on the server side
+     */
     startNewGame: () => {
         socket.emit('startNewGame');
     },
 
-    //Permet d'ouvrir ou de fermer la modale pour afficher les scores de la partie en cours
+    /**
+     * When score button triggered
+     * Open or close the score modal of the current game
+     */
     showScore: () => {
         const scoreModale = document.getElementById('scoreModale');
         if (scoreModale.classList.contains('is-hidden')) {
@@ -148,7 +163,11 @@ const app = {
         }
     },
 
-    //Affiche les cartes dans la main du joueur et les rend cliquable 
+    /**
+     * When updateHands call on server side
+     * Show the player cards and add event listener to each of them
+     * @param {Array} playerCards 
+     */
     showCards: (playerCards) => {
         let index = 1;
         const boardPlayer = document.getElementById('boardCurrentPlayer');
@@ -165,11 +184,16 @@ const app = {
         }
     },
 
-    //Lorsqu'un joueur clique sur une carte, si il n'a pas déjà joué, l'ajoute sur le board
-    //TODO Attention, il va falloir faire appel à plus de vérification ici pour vérifier que la carte est jouable et que c'est bien le tour du joueur.
+    
+    //TODO It should verify it's the player turn, and that the card is playable
+    /**
+     * When a player click on a card
+     * If if didn't play already, add it to the board
+     * @param {Event} event 
+     */
     playCard: (event) => {
 
-        if (app.havePlayed === false) {
+        if (app.hasPlayed === false) {
             const cardPlayed = event.target.textContent;
             const idCardPlayed = event.target.id;
 
@@ -180,7 +204,7 @@ const app = {
                 playerName
             });
 
-            app.havePlayed = true;
+            app.hasPlayed = true;
 
             document.getElementById(`${idCardPlayed}`).remove();
         } else {
