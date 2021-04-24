@@ -16,7 +16,7 @@
 
         <div id="board">
             <div id="topBoard">
-                
+
             </div>
 
             <div id="midBoard">
@@ -35,13 +35,13 @@
                 </div>
                 <div id="scoreZone">
                     <div id="currentRound">
-                        
+
                     </div>
                     <div id="currentTurn">
-                        
+
                     </div>
                     <div id="whoHasToPlay">
-                        
+
                     </div>
                     <button id="scoreButton">
                         Score
@@ -65,8 +65,8 @@
                 </div>
             </div>
         </div>
-
-        <div id="scoreModale" class="is-hidden">
+        <!-- List of modals -->
+        <div id="scoreModal" class="is-hidden">
             <table>
                 <thead>
                     <tr class="players">
@@ -94,48 +94,56 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr id="round1">
                         <th>1</th>
 
                     </tr>
-                    <tr>
+                    <tr id="round2">
                         <th>2</th>
 
                     </tr>
-                    <tr>
+                    <tr id="round3">
                         <th>3</th>
 
                     </tr>
-                    <tr>
+                    <tr id="round4">
                         <th>4</th>
 
                     </tr>
-                    <tr>
+                    <tr id="round5">
                         <th>5</th>
 
                     </tr>
-                    <tr>
+                    <tr id="round6">
                         <th>6</th>
 
                     </tr>
-                    <tr>
+                    <tr id="round7">
                         <th>7</th>
 
                     </tr>
-                    <tr>
+                    <tr id="round8">
                         <th>8</th>
 
                     </tr>
-                    <tr>
+                    <tr id="round9">
                         <th>9</th>
 
                     </tr>
-                    <tr>
+                    <tr id="round10">
                         <th>10</th>
 
                     </tr>
                 </tbody>
             </table>
+        </div>
+        
+        <div id="betModal" class="is-hidden">
+            <form action="" id="betForm">
+                <input type="range" id="betNumberInput" min="0" max="0" value="0">
+                <span id="betNumber">0</span>
+                <button class="btn">Valider le nombre de plis à réaliser</button>
+            </form>
         </div>
 
 
@@ -151,10 +159,10 @@
     <template id="template-cardBoard">
         <div class="cardPlayed">
             <div class="playerName">
-                
+
             </div>
             <div class="cardImage">
-                
+
             </div>
             <!-- <img src="" alt=""> -->
         </div>
@@ -163,21 +171,28 @@
     <template id="template-otherPlayersInfos">
         <div class="otherPlayer">
             <div class="playerName">
-                
+
             </div>
             <div class="previousPlayer">
-                
+
             </div>
             <div class="nextPlayer">
-                
+
             </div>
             <div class="orderInTurn">
-                
+
             </div>
             <div class="cardLeftInHand">
-                
+
             </div>
-            
+            <div class="annoucedFolds">
+
+            </div>
+
+            <div class="currentFolds">
+
+            </div>
+
         </div>
     </template>
 </body>

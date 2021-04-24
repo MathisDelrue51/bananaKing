@@ -11,7 +11,7 @@ socket.on('updateListPlayers', (players) => {
 
     const listPlayers = document.getElementById('playersList');
     listPlayers.textContent = "";
-    const scoreBoard = document.getElementById('scoreModale')
+    const scoreBoard = document.getElementById('scoreModal')
     const activePlayers = scoreBoard.querySelector('.players');
     activePlayers.textContent = "";
     activePlayers.appendChild(document.createElement('th'));
@@ -29,9 +29,15 @@ socket.on('updateListPlayers', (players) => {
     }
 });
 
+//TODO Should update the bets of the players
+//It needs to find out which player bet what and put the information in the right cell
+socket.on('updateScoreBoardBets', (playersInGame) => {
+
+    for (player in playersInGame) {}
+    
+});
+
 socket.on('updateOtherPlayers', (playersInGame) => {
-    //Retrieve the current player's name
-    const currentPlayer = document.getElementById('nameCurrentPlayer').textContent;
 
     const template = document.getElementById('template-otherPlayersInfos');
 
@@ -40,7 +46,7 @@ socket.on('updateOtherPlayers', (playersInGame) => {
 
     //For every player in game (except current player, we add and complete the otherPlayer template in the topboard)
     for (player in playersInGame) {
-        if (player !== currentPlayer) {
+        if (player !== app.playerName) {
 
             const newPlayer = document.importNode(template.content, true);
             newPlayer.querySelector('.playerName').textContent = player;
@@ -70,17 +76,23 @@ socket.on('updateTurn', (turn) => {
 });
 
 //Update the name of the player who has to play
-socket.on('updateWhoHasToPlay', (turn) => {
-    document.getElementById('currentTurn').textContent = `Turn: ${turn}`;
+socket.on('updateWhoHasToPlay', (name) => {
+    document.getElementById('whoHasToPlay').textContent = `A qui de jouer: ${name}`;
 });
 
 //Update player hand with its cards
 // warning: here all players cards are provided, so we verify who is the current player before calling showCards with the corresponding cards
 socket.on('updateHands', (playersInGame) => {
 
-    const currentPlayer = document.getElementById('nameCurrentPlayer').textContent;
+    app.showCards(playersInGame[app.playerName].cards);
+});
 
-    app.showCards(playersInGame[currentPlayer].cards);
+//Show the bet modal with max bet value updated with current round
+socket.on('showBetModal', (round) => {
+    const betModal = document.getElementById('betModal');
+    const betInput = document.getElementById('betNumberInput');
+    betInput.setAttribute('max', `${round}`);
+    betModal.classList.remove('is-hidden');
 });
 
 //Update the board (cards played) for every players each time a player play a card
@@ -101,8 +113,10 @@ socket.on('updateBoard', (board) => {
 
 
 const app = {
-
+    
+    playerName: null,
     hasPlayed: false,
+    betNumber: null,
 
     /**
      * Initiate the event listeners on the page
@@ -119,9 +133,15 @@ const app = {
         const scoreButton = document.getElementById('scoreButton');
         scoreButton.addEventListener('click', app.showScore);
 
+        const betNumberInput = document.getElementById('betNumberInput');
+        betNumberInput.addEventListener('input', app.changeBetNumber);
+
+        const validateBet = document.getElementById('betForm');
+        validateBet.addEventListener('submit', app.bet);
+
     },
 
-    
+
     /**
      * When submit button clicked on insertNewPlayer form
      * Insert the player name in the bottom board and send it to the server to add it to the player list
@@ -135,6 +155,8 @@ const app = {
 
         const playerName = document.getElementById('nameCurrentPlayer');
         playerName.textContent = name;
+
+        app.playerName = name;
 
         const pseudoForm = document.getElementById('pseudoForm');
         pseudoForm.classList.add('is-hidden');
@@ -155,11 +177,11 @@ const app = {
      * Open or close the score modal of the current game
      */
     showScore: () => {
-        const scoreModale = document.getElementById('scoreModale');
-        if (scoreModale.classList.contains('is-hidden')) {
-            scoreModale.classList.remove('is-hidden');
+        const scoreModal = document.getElementById('scoreModal');
+        if (scoreModal.classList.contains('is-hidden')) {
+            scoreModal.classList.remove('is-hidden');
         } else {
-            scoreModale.classList.add('is-hidden');
+            scoreModal.classList.add('is-hidden');
         }
     },
 
@@ -184,7 +206,39 @@ const app = {
         }
     },
 
-    
+    /**
+     * Update the number diplayed on the bet form
+     * @param {Event} event 
+     */
+    changeBetNumber: (event) => {
+        const value = event.target.value;
+
+        const number = document.getElementById('betNumber');
+        number.textContent = value;
+
+        app.betNumber = value;
+    },
+
+    //TODO Should send the bet to the server
+    /**
+     * Remove bet modal when bet is validated
+     * @param {Event} event 
+     */
+    bet: (event) => {
+        event.preventDefault();
+        const betModal = document.getElementById('betModal');
+        betModal.classList.add('is-hidden');
+
+        playerName = app.playerName;
+        betValue = app.betNumber;
+
+        socket.emit('betValidated', {
+            playerName,
+            betValue
+        });
+    },
+
+
     //TODO It should verify it's the player turn, and that the card is playable
     /**
      * When a player click on a card
@@ -197,7 +251,7 @@ const app = {
             const cardPlayed = event.target.textContent;
             const idCardPlayed = event.target.id;
 
-            const playerName = document.getElementById('nameCurrentPlayer').textContent;
+            const playerName = app.playerName
 
             socket.emit('cardPlayed', {
                 cardPlayed,

@@ -106,7 +106,7 @@ html {
     text-align: center;
 }
 
-#scoreModale{
+#scoreModal, #betModal{
     position: absolute;
     top: 30%;
     left: 30%;
@@ -115,7 +115,7 @@ html {
     padding: 10px;    
 }
 
-#scoreModale th{
+#scoreModal th{
     border: 1px solid black;
     padding: 5px;
 }

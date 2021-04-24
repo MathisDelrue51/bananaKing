@@ -28,6 +28,7 @@ const gameInfos = {
     cards: allCards,
     nbCards: 66,
     cardDealed: 0,
+    betsDone: 0
 };
 
 //Will contain all players information
@@ -47,7 +48,7 @@ io.on("connection", (socket) => {
     //When a user connect to the page, udpate the nombre of players in game and show players who already validated their name   
     gameInfos.nbPlayers++;
     io.emit("updateNb", gameInfos.nbPlayers);
-    //Show list of players already in game and update score board with player names
+    //Show list of players already in game with validated names and the score board
     io.emit('updateListPlayers', gameInfos.players);
 
     //When a player leave the page, update the players in game
@@ -69,9 +70,11 @@ io.on("connection", (socket) => {
         //Create an object to represent the player and all needed information
         playersInGame[playerName] = {
             cards: [],
-            order: 0,
+            order: null,
             previousPlayer: null,
-            nextPlayer: null
+            nextPlayer: null,
+            bet: null,
+            folds: null
         };
 
         //Update the list of players and score board with player names for everyone
@@ -126,23 +129,23 @@ io.on("connection", (socket) => {
             //Hide the start button for everyone, display round and turn
             io.emit('hideStartButton');
             io.emit('updateRound', gameInfos.round);
-            io.emit('updateTurn', gameInfos.turn);            
+            io.emit('updateTurn', gameInfos.turn);
 
             //Call drawCards function on server to draw cards to every player            
             drawCards();
         }
     });
-    
+
     /**
      * Draw a cards to each players depending on the current round
      */
-    function drawCards() {        
+    function drawCards() {
 
         while (gameInfos.cardDealed < gameInfos.round) {
             for (player in playersInGame) {
 
                 index = Math.floor(Math.random() * (gameInfos.cards.length - 1));
-                newCard = gameInfos.cards[index];                
+                newCard = gameInfos.cards[index];
                 playersInGame[player].cards.push(newCard);
                 gameInfos.cards.splice(index, 1);
             }
@@ -151,8 +154,24 @@ io.on("connection", (socket) => {
         }
         io.emit('updateHands', playersInGame);
         io.emit('updateOtherPlayers', playersInGame);
+        //TODO Find the player who has the order 1 and send his name to update whoHasToPlay
+        //io.emit('updateWhoHasToPlay', name);
+        io.emit('showBetModal', gameInfos.round);
 
     };
+
+    socket.on('betValidated', ({
+        playerName,
+        betValue
+    }) => {
+        playersInGame[playerName].bet = betValue;
+        gameInfos.betsDone++;
+
+        if(gameInfos.betsDone = gameInfos.nbPlayers){
+            //TODO Update score board with all bets
+            io.emit('updateScoreBoardBets', playersInGame);
+        }
+    });
 
     //Add an element to the object board with the name of the player that contain the card played
     socket.on('cardPlayed', ({
