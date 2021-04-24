@@ -11,10 +11,11 @@ socket.on('updateListPlayers', (players) => {
 
     const listPlayers = document.getElementById('playersList');
     listPlayers.textContent = "";
-    const scoreBoard = document.getElementById('scoreModal')
-    const activePlayers = scoreBoard.querySelector('.players');
-    activePlayers.textContent = "";
-    activePlayers.appendChild(document.createElement('th'));
+
+    // const scoreBoard = document.getElementById('scoreModal')
+    // const activePlayers = scoreBoard.querySelector('.players');
+    // activePlayers.textContent = "";
+    // activePlayers.appendChild(document.createElement('th'));
 
     for (playerName of players) {
 
@@ -22,19 +23,89 @@ socket.on('updateListPlayers', (players) => {
         newPlayerInList.textContent = playerName;
         listPlayers.appendChild(newPlayerInList);
 
-        const newPlayerInScoreBoard = document.createElement('th');
-        newPlayerInScoreBoard.setAttribute('colspan', '2');
-        newPlayerInScoreBoard.textContent = playerName;
-        activePlayers.appendChild(newPlayerInScoreBoard);
+        // const newPlayerInScoreBoard = document.createElement('th');
+        // newPlayerInScoreBoard.setAttribute('colspan', '2');
+        // newPlayerInScoreBoard.textContent = playerName;
+        // activePlayers.appendChild(newPlayerInScoreBoard);
     }
 });
 
 //TODO Should update the bets of the players
 //It needs to find out which player bet what and put the information in the right cell
-socket.on('updateScoreBoardBets', (playersInGame) => {
+socket.on('updateScoreBoard', (scoreInfo) => {
 
-    for (player in playersInGame) {}
-    
+
+    const scoreBoard = document.getElementById('scoreModal')
+    const activePlayers = scoreBoard.querySelector('.players');
+    activePlayers.textContent = "";
+    activePlayers.appendChild(document.createElement('th'));
+
+    for (player in scoreInfo) {
+        const newPlayerInScoreBoard = document.createElement('th');
+        newPlayerInScoreBoard.setAttribute('colspan', '2');
+        newPlayerInScoreBoard.textContent = player;
+        activePlayers.appendChild(newPlayerInScoreBoard);
+    }
+
+    for (let round = 1; round <= 10; round++) {
+        roundElement = document.getElementById(`round${round}`);
+        roundElement.textContent = "";
+        const textRound = document.createElement('td');
+        textRound.textContent = round;
+        roundElement.appendChild(textRound);
+
+        for (player in scoreInfo) {
+
+            const betRoundPlayer = document.createElement('td');
+            const scoreRoundPlayer = document.createElement('td');
+            switch (round) {
+                case 1:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound1;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound1;
+                    break;
+                case 2:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound2;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound2;
+                    break;
+                case 3:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound3;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound3;
+                    break;
+                case 4:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound4;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound4;
+                    break;
+                case 5:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound5;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound5;
+                    break;
+                case 6:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound6;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound6;
+                    break;
+                case 7:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound7;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound7;
+                    break;
+                case 8:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound8;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound8;
+                    break;
+                case 9:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound9;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound9;
+                    break;
+                case 10:
+                    betRoundPlayer.textContent = scoreInfo[player].betRound10;
+                    scoreRoundPlayer.textContent = scoreInfo[player].scoreRound10;
+                    break;
+                default:
+                    console.log("Pas de round correspondant");
+            };
+            roundElement.appendChild(betRoundPlayer);
+            roundElement.appendChild(scoreRoundPlayer);
+        }
+    }
 });
 
 socket.on('updateOtherPlayers', (playersInGame) => {
@@ -113,10 +184,10 @@ socket.on('updateBoard', (board) => {
 
 
 const app = {
-    
+
     playerName: null,
     hasPlayed: false,
-    betNumber: null,
+    betNumber: 0,
 
     /**
      * Initiate the event listeners on the page

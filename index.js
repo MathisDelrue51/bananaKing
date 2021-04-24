@@ -41,6 +41,11 @@ const board = {
 
 };
 
+//Will contain the information for the scoreBoard
+const scoreInfo = {
+
+};
+
 
 io.on("connection", (socket) => {
 
@@ -48,7 +53,7 @@ io.on("connection", (socket) => {
     //When a user connect to the page, udpate the nombre of players in game and show players who already validated their name   
     gameInfos.nbPlayers++;
     io.emit("updateNb", gameInfos.nbPlayers);
-    //Show list of players already in game with validated names and the score board
+    //Show list of players already in game with validated names
     io.emit('updateListPlayers', gameInfos.players);
 
     //When a player leave the page, update the players in game
@@ -77,8 +82,45 @@ io.on("connection", (socket) => {
             folds: null
         };
 
-        //Update the list of players and score board with player names for everyone
+        //Create an object to keep track of the score of the player 
+        scoreInfo[playerName] = {
+            betRound1 : null,
+            foldsRound1 : null,
+            scoreRound1 : null,
+            betRound2 : null,
+            foldsRound2 : null,
+            scoreRound2 : null,
+            betRound3 : null,
+            foldsRound3 : null,
+            scoreRound3 : null,
+            betRound4 : null,
+            foldsRound4 : null,
+            scoreRound4: null,
+            betRound5 : null,
+            foldsRound5 : null,
+            scoreRound5 : null,
+            betRound6 : null,
+            foldsRound6 : null,
+            scoreRound6 : null,
+            betRound7 : null,
+            foldsRound7 : null,
+            scoreRound7 : null,
+            betRound8 : null,
+            foldsRound8 : null,
+            scoreRound8 : null,
+            betRound9 : null,
+            foldsRound9 : null,
+            scoreRound9 : null,
+            betRound10 : null,
+            foldsRound10 : null,
+            scoreRound10 : null
+        };
+
+        //Update the list of players player names for everyone
         io.emit("updateListPlayers", gameInfos.players);
+
+        //Update the scoreBoard
+        io.emit('updateScoreBoard', scoreInfo);
 
         //Update topboard to show other players on every one screen.
         io.emit('updateOtherPlayers', playersInGame);
@@ -165,11 +207,45 @@ io.on("connection", (socket) => {
         betValue
     }) => {
         playersInGame[playerName].bet = betValue;
+        switch (gameInfos.round) {
+            case 1:
+                scoreInfo[playerName].betRound1 = betValue;
+                break;
+            case 2:
+                scoreInfo[playerName].betRound2 = betValue;
+                break;
+            case 3:
+                scoreInfo[playerName].betRound3 = betValue;
+                break;
+            case 4:
+                scoreInfo[playerName].betRound4 = betValue;
+                break;
+            case 5:
+                scoreInfo[playerName].betRound5 = betValue;
+                break;
+            case 6:
+                scoreInfo[playerName].betRound6 = betValue;
+                break;
+            case 7:
+                scoreInfo[playerName].betRound7 = betValue;
+                break;
+            case 8:
+                scoreInfo[playerName].betRound8 = betValue;
+                break;
+            case 9:
+                scoreInfo[playerName].betRound9 = betValue;
+                break;
+            case 10:
+                scoreInfo[playerName].betRound10 = betValue;
+                break;
+            default:
+                console.log("Pas de round correspondant");
+        };
         gameInfos.betsDone++;
 
-        if(gameInfos.betsDone = gameInfos.nbPlayers){
+        if(gameInfos.betsDone === gameInfos.nbPlayers){
             //TODO Update score board with all bets
-            io.emit('updateScoreBoardBets', playersInGame);
+            io.emit('updateScoreBoard', scoreInfo);
         }
     });
 
