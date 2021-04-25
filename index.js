@@ -29,7 +29,8 @@ const gameInfos = {
     nbCards: 66,
     cardDealed: 0,
     betsDone: 0,
-    whoHasToPlay: null
+    whoHasToPlay: null,
+    cardsPlayed: 0
 };
 
 //Will contain all players information
@@ -189,7 +190,6 @@ io.on("connection", (socket) => {
             io.emit('hideStartButton');
             io.emit('updateRound', gameInfos.round);
             io.emit('updateTurn', gameInfos.turn);
-            io.emit('updateWhoHasToPlay', gameInfos.whoHasToPlay);
 
             //Call drawCards function on server to draw cards to every player            
             drawCards();
@@ -214,12 +214,14 @@ io.on("connection", (socket) => {
         }
         io.emit('updateHands', playersInGame);
         io.emit('updateOtherPlayers', playersInGame);
-        //TODO Find the player who has the order 1 and send his name to update whoHasToPlay
-        //io.emit('updateWhoHasToPlay', name);
+        io.emit('updateWhoHasToPlay', gameInfos.whoHasToPlay);
         io.emit('showBetModal', gameInfos.round);
 
     };
 
+    /**
+     * Stock the value of the player bet in scoreInfo for the corresponding round
+     */
     socket.on('betValidated', ({
         playerName,
         betValue
@@ -266,7 +268,9 @@ io.on("connection", (socket) => {
         }
     });
 
-    //Add an element to the object board with the name of the player that contain the card played
+    /**
+     * Add an element to the object board with the name of the player that contain the card played
+     */
     socket.on('cardPlayed', ({
         cardPlayed,
         playerName
@@ -275,8 +279,16 @@ io.on("connection", (socket) => {
         board[playerName].push(cardPlayed);
         io.emit('updateBoard', board);
 
-        //TODO If everyone has played, we won't update whoHasToPlay
-        gameInfos.whoHasToPlay = playersInGame[playerName].nextPlayer;
-        io.emit('updateWhoHasToPlay', gameInfos.whoHasToPlay);
+        gameInfos.cardsPlayed++;
+
+        //If everyone has played, we won't update whoHasToPlay
+        if (gameInfos.cardsPlayed === gameInfos.players.length) {
+            //TODO Afficher la modale pour déterminer vainqueur a la main
+            console.log('choix du vainqueur');
+            io.emit('updateWinnerModal', gameInfos.players);
+        } else {
+            gameInfos.whoHasToPlay = playersInGame[playerName].nextPlayer;
+            io.emit('updateWhoHasToPlay', gameInfos.whoHasToPlay);
+        }
     });
 });

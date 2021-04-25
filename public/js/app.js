@@ -134,6 +134,28 @@ socket.on('updateOtherPlayers', (playersInGame) => {
     }
 });
 
+socket.on('updateWinnerModal', (players) => {
+    const winnerForm = document.getElementById('winnerForm');
+
+    for(player of players){
+        const input = document.createElement('input');
+        input.setAttribute('type', 'radio');
+        input.setAttribute('id', player);
+        input.setAttribute('value', player);
+        input.setAttribute('name', 'winnerTurn');
+
+        const label = document.createElement('label');
+        label.setAttribute('for', player);
+        label.textContent = player;
+
+        winnerForm.appendChild(input);
+        winnerForm.appendChild(label);
+    }
+
+    const winnerModal = document.getElementById('winnerModal');
+    winnerModal.classList.remove('is-hidden');
+});
+
 //Hide the start button for every player already in the game
 socket.on('hideStartButton', () => {
     const startButton = document.getElementById('startButton');
