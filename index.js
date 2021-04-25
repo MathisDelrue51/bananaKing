@@ -58,17 +58,32 @@ io.on("connection", (socket) => {
     io.emit('updateListPlayers', gameInfos.players);
 
     //When a player leave the page, update the players in game
-    //TODO should update the list of players name and the score board
     socket.on('disconnect', () => {
         console.log('user disconnected');
         gameInfos.nbPlayers--;
         io.emit("updateNb", gameInfos.nbPlayers);
 
-        //TODO Find which player disconnected and update list of players  
+        playerName = socket.id;
+
+        //Remove the disconnected user from the player list
+        gameInfos.players.splice(gameInfos.players.indexOf(playerName), 1);
+        io.emit('updateListPlayers', gameInfos.players);
+
+        //Remove the disconnected user from the players in game
+        delete playersInGame[playerName];
+        io.emit('updateOtherPlayers', playersInGame);
+
+        //Remove the disconnected user from the scoreBoard
+        delete scoreInfo[playerName];
+        io.emit('updateScoreBoard', scoreInfo);
+
+        //TODO if the game has started and the disconnection is a player, send an alert to everyone
     });
 
     // A new player validated his name    
     socket.on('newPlayer', (playerName) => {
+
+        socket.id = playerName;
 
         //Add the name to the list of players
         gameInfos.players.push(playerName);
@@ -85,36 +100,36 @@ io.on("connection", (socket) => {
 
         //Create an object to keep track of the score of the player 
         scoreInfo[playerName] = {
-            betRound1 : null,
-            foldsRound1 : null,
-            scoreRound1 : null,
-            betRound2 : null,
-            foldsRound2 : null,
-            scoreRound2 : null,
-            betRound3 : null,
-            foldsRound3 : null,
-            scoreRound3 : null,
-            betRound4 : null,
-            foldsRound4 : null,
+            betRound1: null,
+            foldsRound1: null,
+            scoreRound1: null,
+            betRound2: null,
+            foldsRound2: null,
+            scoreRound2: null,
+            betRound3: null,
+            foldsRound3: null,
+            scoreRound3: null,
+            betRound4: null,
+            foldsRound4: null,
             scoreRound4: null,
-            betRound5 : null,
-            foldsRound5 : null,
-            scoreRound5 : null,
-            betRound6 : null,
-            foldsRound6 : null,
-            scoreRound6 : null,
-            betRound7 : null,
-            foldsRound7 : null,
-            scoreRound7 : null,
-            betRound8 : null,
-            foldsRound8 : null,
-            scoreRound8 : null,
-            betRound9 : null,
-            foldsRound9 : null,
-            scoreRound9 : null,
-            betRound10 : null,
-            foldsRound10 : null,
-            scoreRound10 : null
+            betRound5: null,
+            foldsRound5: null,
+            scoreRound5: null,
+            betRound6: null,
+            foldsRound6: null,
+            scoreRound6: null,
+            betRound7: null,
+            foldsRound7: null,
+            scoreRound7: null,
+            betRound8: null,
+            foldsRound8: null,
+            scoreRound8: null,
+            betRound9: null,
+            foldsRound9: null,
+            scoreRound9: null,
+            betRound10: null,
+            foldsRound10: null,
+            scoreRound10: null
         };
 
         //Update the list of players player names for everyone
@@ -246,7 +261,7 @@ io.on("connection", (socket) => {
         };
         gameInfos.betsDone++;
 
-        if(gameInfos.betsDone === gameInfos.nbPlayers){
+        if (gameInfos.betsDone === gameInfos.nbPlayers) {
             io.emit('updateScoreBoard', scoreInfo);
         }
     });
