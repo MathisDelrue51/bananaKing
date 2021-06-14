@@ -21,9 +21,10 @@
 
             <div id="midBoard">
                 <div id="startZone">
+                    <div>Nombre de personnes connectés</div>
                     <div id="nbPlayers"></div>
-                    <div id="playersList">
-                    </div>
+                    <div>Liste des joueurs InGame</div>
+                    <ul id="playersList"></ul>
                     <button id="startButton">
                         Start
                     </button>
@@ -51,7 +52,7 @@
             </div>
 
             <div id="bottomBoard">
-                <div id="nameCurrentPlayer">
+                <div id="currentPlayerInfos">
 
                 </div>
                 <div id="boardCurrentPlayer">
@@ -70,27 +71,8 @@
             <table>
                 <thead>
                     <tr class="players">
-                        <th></th>
                     </tr>
                     <tr class="forecast">
-                        <th></th>
-                        <th>prévu</th>
-                        <th>score</th>
-
-                        <th>prévu</th>
-                        <th>score</th>
-
-                        <th>prévu</th>
-                        <th>score</th>
-
-                        <th>prévu</th>
-                        <th>score</th>
-
-                        <th>prévu</th>
-                        <th>score</th>
-
-                        <th>prévu</th>
-                        <th>score</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -128,12 +110,10 @@
 
         <div id="winnerModal" class="is-hidden" >
             <form action="" id="winnerForm">                            
-                <button class="btn">Valider le vainqueur du pli</button>               
+                <button class="btn" id="winnerButton">Valider le vainqueur du pli</button>               
             </form>
         </div>
-
-
-
+        
     </div>
 
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"
@@ -154,8 +134,8 @@
         </div>
     </template>
 
-    <template id="template-otherPlayersInfos">
-        <div class="otherPlayer">
+    <template id="template-playersInfos">
+        <div class="playerInfos">
             <div class="playerName">
 
             </div>
@@ -166,9 +146,6 @@
 
             </div>
             <div class="orderInTurn">
-
-            </div>
-            <div class="cardLeftInHand">
 
             </div>
             <div class="annoucedFolds">

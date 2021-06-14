@@ -1,6 +1,4 @@
-# Projet SkullKing
-
-Ce projet vise à recréer le jeu de plateau SkullKing
+# BananaKing
 
 ## Stack technique
 

@@ -11,7 +11,7 @@ html {
     justify-content: center;
 }
 
-.otherPlayer{
+.otherPlayerInfos{
     width: 20%;
     background-color: rgb(44, 73, 38,0.5);
     margin: 20px;
@@ -92,9 +92,9 @@ html {
     width: 80%;    
 }
 
-#nameCurrentPlayer{
+#currentPlayerInfos{
     background-color:#8ac5c9;
-    width: 10%;
+    width: 15%;
     text-align: center;
 }
 
