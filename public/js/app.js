@@ -17,7 +17,7 @@ socket.on('updateListPlayers', (players) => {
         const newPlayerInList = document.createElement('li');
         newPlayerInList.textContent = playerName;
         listPlayers.appendChild(newPlayerInList);
-    }    
+    }
 });
 
 //It needs to find out which player bet what and put the information in the right cell
@@ -125,7 +125,7 @@ socket.on('updateScoreBoard', (scoreInfo) => {
     }
 });
 
-socket.on('updateOtherPlayers', (playersInGame) => {
+socket.on('updatePlayersInformation', (playersInGame) => {
 
     const template = document.getElementById('template-playersInfos');
 
@@ -135,7 +135,7 @@ socket.on('updateOtherPlayers', (playersInGame) => {
     const currentPlayer = document.getElementById('currentPlayerInfos');
     currentPlayer.textContent = "";
 
-    //For every player in game (except current player, we add and complete the otherPlayer template in the topboard)
+    //For every player in game we show all necessary information
     for (player in playersInGame) {
         if (player !== app.playerName) {
 
@@ -148,7 +148,7 @@ socket.on('updateOtherPlayers', (playersInGame) => {
             newPlayer.querySelector('.annoucedFolds').textContent = `Pari: ${playersInGame[player].bet}`;
             newPlayer.querySelector('.currentFolds').textContent = `Nb de plis: ${playersInGame[player].folds}`;
             otherPlayers.appendChild(newPlayer);
-        }else if (player === app.playerName){
+        } else if (player === app.playerName) {
             const newPlayer = document.importNode(template.content, true);
             newPlayer.querySelector('.playerName').textContent = player;
             newPlayer.querySelector('.previousPlayer').textContent = `Joueur précédent: ${playersInGame[player].previousPlayer}`;
@@ -156,12 +156,12 @@ socket.on('updateOtherPlayers', (playersInGame) => {
             newPlayer.querySelector('.orderInTurn').textContent = `Ordre: ${playersInGame[player].order}e`;
             newPlayer.querySelector('.annoucedFolds').textContent = `Pari: ${playersInGame[player].bet}`;
             newPlayer.querySelector('.currentFolds').textContent = `Nb de plis: ${playersInGame[player].folds}`;
-            currentPlayer.appendChild(newPlayer); 
+            currentPlayer.appendChild(newPlayer);
         }
     }
 });
 
-socket.on('showWinnerModal', (players) => { 
+socket.on('showWinnerModal', (players) => {
     const winnerModal = document.getElementById('winnerModal');
     winnerModal.classList.remove('is-hidden');
 });
@@ -171,15 +171,24 @@ socket.on('hideWinnerModal', () => {
     winnerModal.classList.add('is-hidden');
 });
 
-//Hide the start button for every player already in the game
+//Hide the start button for every player already in the game and show reset button
 socket.on('hideStartButton', () => {
     const startButton = document.getElementById('startButton');
     startButton.classList.add('is-hidden');
 
+    const resetButton = document.getElementById('resetButton');
+    resetButton.classList.remove('is-hidden');
+
+});
+
+socket.on('clearWinnerModal', () => {
+    const winnerForm = document.getElementById('winnerForm');
+    winnerForm.querySelectorAll('input').forEach(el => el.remove());
+    winnerForm.querySelectorAll('label').forEach(el => el.remove());
 });
 
 //Add all players names in the winner modal
-socket.on('prepareWinnerModal', (players) => {  
+socket.on('prepareWinnerModal', (players) => {
     const winnerForm = document.getElementById('winnerForm');
 
     for (player of players) {
@@ -248,7 +257,19 @@ socket.on('updateBoard', (board) => {
 
 socket.on('cleanBoard', () => {
     document.getElementById('dropZone').textContent = "";
+});
+
+socket.on('cleanHands', () => {
+    document.getElementById('boardCurrentPlayer').textContent = "";
     app.hasPlayed = false;
+});
+
+socket.on('startAndStopRound', () => {
+    if (app.roundStarted === true) {
+        app.roundStarted = false
+    } else if (app.roundStarted === false) {
+        app.roundStarted = true
+    }
 });
 
 
@@ -257,8 +278,8 @@ const app = {
     playerName: null,
     hasPlayed: false,
     betNumber: 0,
-
     whoHasToPlay: null,
+    roundStarted: false,
 
     /**
      * Initiate the event listeners on the page
@@ -271,6 +292,9 @@ const app = {
 
         const startButton = document.getElementById('startButton');
         startButton.addEventListener('click', app.startNewGame);
+
+        const resetButton = document.getElementById('resetButton');
+        resetButton.addEventListener('click', app.resetGame);
 
         const scoreButton = document.getElementById('scoreButton');
         scoreButton.addEventListener('click', app.showScore);
@@ -314,6 +338,14 @@ const app = {
      */
     startNewGame: () => {
         socket.emit('startNewGame');
+    },
+
+    /**
+     * When reset button is triggered
+     * Call the resetGame function on serverside
+     */
+    resetGame: () => {
+        socket.emit('resetGame');
     },
 
     /**
@@ -390,7 +422,7 @@ const app = {
      */
     playCard: (event) => {
 
-        if (app.hasPlayed === false && app.whoHasToPlay === app.playerName) {
+        if (app.hasPlayed === false && app.whoHasToPlay === app.playerName && app.roundStarted===true) {
             const cardPlayed = event.target.textContent;
             const idCardPlayed = event.target.id;
 

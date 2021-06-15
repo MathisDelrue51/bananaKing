@@ -34,4 +34,6 @@ io.on("connection", (socket) => {
     socketHandler.cardPlayed(socket, io);
 
     socketHandler.winnerSelected(socket, io);
+
+    socketHandler.resetGame(socket, io);
 });
