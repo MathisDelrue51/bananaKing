@@ -257,11 +257,11 @@ socket.on('updateBoard', (board) => {
 
 socket.on('cleanBoard', () => {
     document.getElementById('dropZone').textContent = "";
+    app.hasPlayed = false;
 });
 
 socket.on('cleanHands', () => {
-    document.getElementById('boardCurrentPlayer').textContent = "";
-    app.hasPlayed = false;
+    document.getElementById('boardCurrentPlayer').textContent = "";    
 });
 
 socket.on('startAndStopRound', () => {
@@ -422,7 +422,7 @@ const app = {
      */
     playCard: (event) => {
 
-        if (app.hasPlayed === false && app.whoHasToPlay === app.playerName && app.roundStarted===true) {
+        if (app.hasPlayed === false && app.whoHasToPlay === app.playerName && app.roundStarted === true) {
             const cardPlayed = event.target.textContent;
             const idCardPlayed = event.target.id;
 
@@ -437,7 +437,17 @@ const app = {
 
             document.getElementById(`${idCardPlayed}`).remove();
         } else {
+
             console.log("Ce n'est pas le moment");
+            if (app.hasPlayed === true) {
+                console.log("Vous avez déjà joué ce tour");
+            }
+            if (app.whoHasToPlay !== app.playerName) {
+                console.log("Ce n'est pas à vous de jouer");
+            }
+            if (app.roundStarted === false) {
+                console.log("Le round n'a pas démarré");
+            }
         }
 
 

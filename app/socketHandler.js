@@ -125,7 +125,18 @@ function updateInfosForNewRound() {
     gameInfos.round++;
     gameInfos.turn = 1;
 
-    //gameInfos.whoHasToPlay =
+    for (player in playersInGame) {
+        if (playersInGame[player].order === 1) {
+            playersInGame[player].order = gameInfos.players.length;
+        } else {
+            playersInGame[player].order--;
+        }
+
+        if (playersInGame[player].order === 1) {
+            gameInfos.whoHasToPlay = player;
+        }
+    }
+
     drawCards();
 
 };
@@ -284,7 +295,7 @@ const socketHandler = {
             delete scoreInfo[playerName];
             io.emit('updateScoreBoard', scoreInfo);
 
-            if(gameInfos.players.length<2){
+            if (gameInfos.players.length < 2) {
                 gameInfos.isStarted = false;
             }
         });
@@ -477,13 +488,14 @@ const socketHandler = {
 
             updateInfosForNewTurn(winner);
 
-            io.emit('startAndStopRound');
             io.emit('hideWinnerModal');
             io.emit('cleanBoard');
 
             if (gameInfos.turn > gameInfos.round) {
                 console.log("fin du round")
                 updateScore();
+                
+                io.emit('startAndStopRound');
                 io.emit('updateScoreBoard', scoreInfo);
 
                 if (gameInfos.round == 10) {
