@@ -1,5 +1,7 @@
 # BananaKing
 
+The goal was to create a first version of a card game to play with friends online.
+
 ## Stack technique
 
 - NodeJS 14
